@@ -4,7 +4,8 @@
   "description": "Gateway para pagamento atraves de recursos http.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [
     "getaway",
@@ -12,5 +13,10 @@
     "api"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "body-parse": "^0.1.0",
+    "consign": "^0.1.6",
+    "express": "^4.17.1"
+  }
 }
