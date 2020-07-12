@@ -1,18 +1,20 @@
-const express = require('express')
-const consign = require('consign')
-var bodyParser = require('body-parser')
+var express = require('express');
+var consign = require('consign');
+var bodyParser = require('body-parser');
+//var expressValidator = require('express-validator');
 
 module.exports = function(){
-    
-    const app = express()
-    bodyParser.urlencoded({extended: true})
-    app.use(bodyParser.json())
+  var app = express();
 
-    consign()
-    .include('controllers')
-    .into(app)
+  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(bodyParser.json());
 
-    return app
+  //app.use(expressValidator());
 
+  consign()
+   .include('controllers')
+   .then('persistencia')
+   .into(app);
 
+  return app;
 }
