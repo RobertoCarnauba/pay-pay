@@ -1,0 +1,16 @@
+{
+  "name": "paypay",
+  "version": "1.0.0",
+  "description": "Gateway para pagamento atraves de recursos http.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "getaway",
+    "pagamento",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC"
+}
