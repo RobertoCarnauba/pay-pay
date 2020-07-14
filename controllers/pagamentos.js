@@ -20,8 +20,8 @@ module.exports = function (app) {
     var connection = app.persistencia.connectionFactory();
     var pagamentoDao = new app.persistencia.PagamentoDao(connection);
 
-    pagamentoDao.atualizar(pagamento, function(erro){
-      if(erro){
+    pagamentoDao.atualizar(pagamento, function (erro) {
+      if (erro) {
         res.status(500).send(erro)
         return;
       }
@@ -41,8 +41,8 @@ module.exports = function (app) {
     var connection = app.persistencia.connectionFactory();
     var pagamentoDao = new app.persistencia.PagamentoDao(connection);
 
-    pagamentoDao.atualizar(pagamento, function(erro){
-      if(erro){
+    pagamentoDao.atualizar(pagamento, function (erro) {
+      if (erro) {
         res.status(500).send(erro)
         return;
       }
@@ -52,7 +52,7 @@ module.exports = function (app) {
 
   app.post('/pagamentos/pagamento', [
     body('forma_de_pagamento', '[forma_de_pagamento] is required').notEmpty(),
-    body('valor', '[valor] is required').isLength({ min: 5 }).isFloat()
+    body('valor', '[valor] is required').isLength({ min: 4 }).isFloat()
   ], (req, res) => {
 
     const errors = validationResult(req);
@@ -74,9 +74,26 @@ module.exports = function (app) {
         console.log("Erro ao salvar -->" + error)
         res.status(500).send(error);
       } else {
+        pagamento.id = result.insertId
         console.log('pagamento criado: ' + pagamento.valor);
-        res.location('/pagamentos/pagamento/' + result.insertId);
-        res.status(201).json(pagamento);
+        res.location('/pagamentos/pagamento/' + pagamento.id);
+
+        var response = {
+          daddos_do_pagamento: pagamento,
+          links: [
+            {
+              href:"http://localhost:3000/pagamentos/pagamento/"+pagamento.id,
+              rel:"confirmar",
+              method:"PUT"
+            },
+            {
+              href:"http://localhost:3000/pagamentos/pagamento/"+pagamento.id,
+              rel:"cancelar",
+              method:"DELETE"
+            }
+          ]
+        }
+        res.status(201).json(response);
       }
 
     });;
