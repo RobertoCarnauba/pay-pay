@@ -74,34 +74,76 @@ module.exports = function (app) {
     pagamento.data = new Date;
 
     pagamentoDao.salva(pagamento, function (error, result) {
+
       if (error) {
+
         console.log("Erro ao salvar -->" + error)
         res.status(500).send(error);
+
       } else {
+
         pagamento.id = result.insertId
         console.log('pagamento criado: ' + pagamento.valor);
         res.location('/pagamentos/pagamento/' + pagamento.id);
 
-        var response = {
-          daddos_do_pagamento: pagamento,
-          links: [
-            {
-              href:"http://localhost:3000/pagamentos/pagamento/"+pagamento.id,
-              rel:"confirmar",
-              method:"PUT"
-            },
-            {
-              href:"http://localhost:3000/pagamentos/pagamento/"+pagamento.id,
-              rel:"cancelar",
-              method:"DELETE"
+        if (pagamento.forma_de_pagamento == "cartao-paypay") {
+
+          var cartao = req.body["cartao"]
+          console.log(cartao)
+
+          const clienteCartoes = new app.servicos.clienteCartoes();
+          clienteCartoes.autoriza(cartao, function (exception, request, response, retorno) {
+            if(exception){
+
+             console.log(exception)
+             res.status(400).send(exception)
+
+            }else {
+
+              var response = {
+                daddos_do_pagamento: pagamento,
+                cartao: retorno,
+                links: [
+                  {
+                    href: "http://localhost:3000/pagamentos/pagamento/" + pagamento.id,
+                    rel: "confirmar",
+                    method: "PUT"
+                  },
+                  {
+                    href: "http://localhost:3000/pagamentos/pagamento/" + pagamento.id,
+                    rel: "cancelar",
+                    method: "DELETE"
+                  }
+                ]
+              }
+              res.status(201).json(response)
+              return
             }
-          ]
+          })
+        } else {
+
+          var response = {
+            daddos_do_pagamento: pagamento,
+            links: [
+              {
+                href: "http://localhost:3000/pagamentos/pagamento/" + pagamento.id,
+                rel: "confirmar",
+                method: "PUT"
+              },
+              {
+                href: "http://localhost:3000/pagamentos/pagamento/" + pagamento.id,
+                rel: "cancelar",
+                method: "DELETE"
+              }
+            ]
+          }
+          res.status(201).json(response);
         }
-        res.status(201).json(response);
+
       }
 
-    });;
-  });
+    })
+  })
 }
 
 

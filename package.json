@@ -21,6 +21,7 @@
     "express-validator": "^6.6.0",
     "mysql": "^2.18.1",
     "restify": "^8.5.1",
+    "restify-clients": "^3.0.0",
     "validator": "^13.1.1"
   }
 }

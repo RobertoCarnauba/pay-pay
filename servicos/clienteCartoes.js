@@ -1,11 +1,16 @@
 const assert = require('assert');
-const clients = require('restify-clients');
+const restify = require('restify-clients');
  
-var client = clients.createJsonClient({
-  url: 'http://localhost:3001'
-});
+function CartoesClient(){
+  this._cliente = restify.createJsonClient({
+    url: 'http://localhost:3001'
+  });
+}
+
+CartoesClient.prototype.autoriza = function(cartao, callback){
+  this._cliente.post('/cartoes/autoriza', cartao, callback) 
+}
  
-client.post('/cartoes/autoriza',{cartao} , function (err, req, res, obj) {
-  assert.ifError(err);
-  console.log( obj);
-});
+module.exports = function(){
+  return CartoesClient;
+}
