@@ -5,10 +5,12 @@ const { body, validationResult } = require('express-validator');
 
 module.exports = function (app) {
 
+  //Idex
   app.get('/pagamentos', (req, res) => {
     res.send('PAGAMENTOS')
   })
 
+  //Deleta um pagamento(cancelar)
   app.delete('/pagamentos/pagamento/:id', (req, res) => {
 
     var pagamento = {}
@@ -30,6 +32,7 @@ module.exports = function (app) {
     })
   })
 
+  //Altera um pagamento 
   app.put('/pagamentos/pagamento/:id', (req, res) => {
 
     var pagamento = {}
@@ -50,9 +53,10 @@ module.exports = function (app) {
     })
   })
 
+  //Cria um novo pagamento
   app.post('/pagamentos/pagamento', [
-    body('forma_de_pagamento', '[forma_de_pagamento] is required').notEmpty(),
-    body('valor', '[valor] is required').isLength({ min: 4 }).isFloat()
+    body('pagamento.forma_de_pagamento', '[forma_de_pagamento] is required').notEmpty(),
+    body('pagamento.valor', '[valor] is required').isLength({ min: 4 }).isFloat()
   ], (req, res) => {
 
     const errors = validationResult(req);
@@ -60,7 +64,7 @@ module.exports = function (app) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    var pagamento = req.body;
+    var pagamento = req.body["pagamento"];
     console.log('processando pagamento...');
 
     var connection = app.persistencia.connectionFactory();
