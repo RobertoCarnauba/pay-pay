@@ -93,16 +93,16 @@ module.exports = function (app) {
 
           const clienteCartoes = new app.servicos.clienteCartoes();
           clienteCartoes.autoriza(cartao, function (exception, request, response, retorno) {
-            if(exception){
+            if (exception) {
 
-             console.log(exception)
-             res.status(400).send(exception)
+              console.log(exception)
+              res.status(400).send(exception)
 
-            }else {
+            } else {
 
               var response = {
-                daddos_do_pagamento: pagamento,
                 cartao: retorno,
+                daddos_do_pagamento: pagamento,
                 links: [
                   {
                     href: "http://localhost:3000/pagamentos/pagamento/" + pagamento.id,
